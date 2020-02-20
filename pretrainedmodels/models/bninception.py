@@ -486,13 +486,14 @@ class BNInception(nn.Module):
         adaptiveAvgPoolWidth = features.shape[2]
         x = F.avg_pool2d(features, kernel_size=adaptiveAvgPoolWidth)
         x = x.view(x.size(0), -1)
+        last_feature = x
         x = self.last_linear(x)
-        return x
+        return x, last_feature
 
     def forward(self, input):
         x = self.features(input)
-        x = self.logits(x)
-        return x
+        x, last_feature = self.logits(x)
+        return x, last_feature
 
 def bninception(num_classes=1000, pretrained='imagenet'):
     r"""BNInception model architecture from <https://arxiv.org/pdf/1502.03167.pdf>`_ paper.
